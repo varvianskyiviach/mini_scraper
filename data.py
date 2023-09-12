@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-class Miniatures(BaseModel):
-    article: int
+class UncommitedMiniatures(BaseModel):
+    sku: int
     name: str
     image: str | None
 
