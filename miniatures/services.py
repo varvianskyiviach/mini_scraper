@@ -5,8 +5,8 @@ from config.settings import STATIC_ROOT
 from miniatures.models import UncommitedMiniatures
 
 
-def get_base_miniatures() -> List[UncommitedMiniatures]:
-    base_miniatures: list[UncommitedMiniatures] = []
+def get_all_base_miniatures(file) -> List[UncommitedMiniatures]:
+    all_base_miniatures: list[UncommitedMiniatures] = []
 
     # with open('list_new-TDSheet.csv', "r") as f:
     #     lines = f.readlines()
@@ -14,11 +14,11 @@ def get_base_miniatures() -> List[UncommitedMiniatures]:
     #         value = row.strip().split(',')
     #         base_miniatures.append(UncommitedMiniatures(sku=int(value[0][3:]), name=value[1], image=None))
 
-    with open(f'{STATIC_ROOT}/list_new-TDSheet.csv', "r") as csv_file:
+    with open(f'{STATIC_ROOT}/{file}', "r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
             row['sku'] = int(row['sku'][3:])
             row['image'] = None
-            base_miniatures.append(UncommitedMiniatures(**row))
+            all_base_miniatures.append(UncommitedMiniatures(**row))
 
-    return base_miniatures
+    return all_base_miniatures

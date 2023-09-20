@@ -7,7 +7,7 @@ from config.settings import MAIN_URL
 from miniatures.models import UncommitedMiniatures
 
 
-def parse_mode() -> List[UncommitedMiniatures]:
+def get_all_web_miniatures() -> List[UncommitedMiniatures]:
 
     session = requests.Session()
     responce = session.get(MAIN_URL)
