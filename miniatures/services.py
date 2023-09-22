@@ -2,11 +2,11 @@ import csv
 from typing import List
 
 from config.settings import STATIC_ROOT
-from miniatures.models import UncommitedMiniatures
+from miniatures.models import UncommitedMiniature
 
 
-def get_all_base_miniatures(file) -> List[UncommitedMiniatures]:
-    all_base_miniatures: list[UncommitedMiniatures] = []
+def get_all_base_miniatures(file) -> List[UncommitedMiniature]:
+    all_base_miniatures: list[UncommitedMiniature] = []
 
     # with open('list_new-TDSheet.csv', "r") as f:
     #     lines = f.readlines()
@@ -19,6 +19,6 @@ def get_all_base_miniatures(file) -> List[UncommitedMiniatures]:
         for row in csv_reader:
             row['sku'] = int(row['sku'][3:])
             row['image'] = None
-            all_base_miniatures.append(UncommitedMiniatures(**row))
+            all_base_miniatures.append(UncommitedMiniature(**row))
 
     return all_base_miniatures

@@ -13,21 +13,23 @@ load_dotenv(dotenv_path=f'{ROOT_DIR}/.env')
 # ====================
 # parser configuration
 # ====================
-# path
+# url
 MAIN_URL = "https://wizkids.com/upm"
 
 # ====================
 # web app cofiguration
 # ====================
-# path
-# --------------------
-# local development
-ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
-# production
-# ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
 
+# --------------------
+# url
+# - local development -
+ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
+# - production -
+# ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
 ADMIN_LOGIN_URL = f'{ADMIN_BASE_URL}common/login'
+# endpoints
 ADMIN_FILE_UPLOAD = "common/filemanager/upload"
+ADMIN_PRODUCT_ADD = "catalog/product/add"
 # --------------------
 
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")

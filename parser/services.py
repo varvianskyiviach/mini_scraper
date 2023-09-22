@@ -4,10 +4,10 @@ import requests
 from bs4 import BeautifulSoup
 
 from config.settings import MAIN_URL
-from miniatures.models import UncommitedMiniatures
+from miniatures.models import UncommitedMiniature
 
 
-def get_all_web_miniatures() -> List[UncommitedMiniatures]:
+def get_all_web_miniatures() -> List[UncommitedMiniature]:
 
     session = requests.Session()
     responce = session.get(MAIN_URL)
@@ -18,7 +18,7 @@ def get_all_web_miniatures() -> List[UncommitedMiniatures]:
     table = soup.find("table", class_="tablepress-id-108")
     results_table = table.find("tbody", class_="row-hover").find_all("tr")
 
-    all_web_miniatures: list[UncommitedMiniatures] = []
+    all_web_miniatures: list[UncommitedMiniature] = []
 
     for row in results_table:
         columns = row.find_all("td")
@@ -37,7 +37,7 @@ def get_all_web_miniatures() -> List[UncommitedMiniatures]:
         name = columns[2].get_text()
 
         if sku is not None:
-            all_web_miniatures.append(UncommitedMiniatures(
+            all_web_miniatures.append(UncommitedMiniature(
                 sku=sku, name=name, image=image))
 
     return all_web_miniatures
