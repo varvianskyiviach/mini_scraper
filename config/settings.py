@@ -5,10 +5,9 @@ from dotenv import load_dotenv
 
 ROOT_DIR = Path(__file__).parent.parent
 STATIC_ROOT = ROOT_DIR / "staticfiles"
-STATIC_ROOT_IMAGES = STATIC_ROOT / "images"
 
 FILE_EXEL_NAME = "list_new.csv"
-load_dotenv(dotenv_path=f'{ROOT_DIR}/.env')
+load_dotenv(dotenv_path=f"{ROOT_DIR}/.env")
 
 # ====================
 # parser configuration
@@ -23,10 +22,10 @@ MAIN_URL = "https://wizkids.com/upm"
 # --------------------
 # url
 # - local development -
-ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
+# ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
 # - production -
-# ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
-ADMIN_LOGIN_URL = f'{ADMIN_BASE_URL}common/login'
+ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
+ADMIN_LOGIN_URL = f"{ADMIN_BASE_URL}common/login"
 # endpoints
 ADMIN_FILE_UPLOAD = "common/filemanager/upload"
 ADMIN_PRODUCT_ADD = "catalog/product/add"
