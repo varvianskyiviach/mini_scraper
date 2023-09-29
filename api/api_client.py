@@ -1,6 +1,6 @@
 from requests import Session
 
-from miniatures.models import Miniature
+from product.models import Product
 
 
 class APIClient:
@@ -9,16 +9,17 @@ class APIClient:
         self.token = token
         self.session = session
 
-    def send_post_request(self, endpoint: str, data: dict[Miniature]):
+    def send_post_request(self, endpoint: str, data: Product):
+        form_data: dict = data.model_dump(by_alias=True)
         url_create_object = f"{self.base_url}{endpoint}"
         params = {
             "token": self.token,
         }
         try:
-            response = self.session.post(url_create_object, params=params, data=data)
+            response = self.session.post(url_create_object, params=params, data=form_data)
             if response.status_code == 200:
                 print(
-                    f"✅ Object successfully created: {data['product_description[1][name]']} \n"
+                    f"✅ Object successfully created: {form_data['product_description[1][name]']} \n"
                     f"{url_create_object}"
                 )
             else:
@@ -27,6 +28,6 @@ class APIClient:
                 )
         except Exception as e:
             print(
-                f"❌ Could not create an object: {data['product_description[1][name]']} \n"
+                f"❌ Could not create an object: {form_data['product_description[1][name]']} \n"
             )
             print(f"❗️{str(e)}")

@@ -2,46 +2,50 @@ from datetime import date
 
 from pydantic import BaseModel, Field
 
-from miniatures.constants import FieldMiniature
+from product.constants import FieldProduct, CATEGORY_MAPPING
 
 
-class UncommitedMiniature(BaseModel):
+class UncommitedProduct(BaseModel):
     sku: int
     name: str
-    image: str | None
+    url_image: str | None
+    category_id: list[int] | None
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         return "\n".join(
             (
-                f"sku: {self.sku}",
-                f"name: {self.name}",
+                f"name: {self.name},",
+                f"=================",
+                f"sku: {self.sku},",
+                f"url_image: {self.url_image},",
+                f"category_id: {self.category_id}"
             )
         )
 
 
-class Miniature(BaseModel):
+class Product(BaseModel):
     name: str = Field(serialization_alias="product_description[1][name]")
     name_alternative: str = Field(serialization_alias="upc")
     description: str = Field(
         serialization_alias="product_description[1][description]",
-        default=FieldMiniature.DESCRIPTION,
+        default=FieldProduct.DESCRIPTION,
     )
     description_short: str = Field(
         serialization_alias="product_description[1][meta_keyword]",
-        default=FieldMiniature.DESCRIPTION_SHORT,
+        default=FieldProduct.DESCRIPTION_SHORT,
     )
     html_meta_title: str = Field(
         serialization_alias="product_description[1][meta_title]",
-        default=FieldMiniature.HTML_META_TITLE,
+        default=FieldProduct.HTML_META_TITLE,
     )
     html_meta_h1: str = Field(serialization_alias="product_description[1][meta_h1]")
     meta_description: str = Field(
         serialization_alias="product_description[1][meta_description]",
-        default=FieldMiniature.META_DESCRIPTION,
+        default=FieldProduct.META_DESCRIPTION,
     )
     tag_description: str = Field(
         serialization_alias="product_description[1][tag]",
-        default=FieldMiniature.TAG_DESCRIPTION,
+        default=FieldProduct.TAG_DESCRIPTION,
     )
 
     model: str = Field(serialization_alias="model")
@@ -58,7 +62,13 @@ class Miniature(BaseModel):
     status: int = Field(serialization_alias="status", default=1)
 
     manufacturer_id: int = Field(serialization_alias="manufacturer_id", default=88)
-    main_category_id: int = Field(serialization_alias="main_category_id", default=287)
-    product_category: list[int] = Field(serialization_alias="product_category[]", default=[287, 289,])
+    main_category_id: int = Field(
+        serialization_alias="main_category_id",
+        default=CATEGORY_MAPPING.get("Main Category"),
+    )
+    product_category: list[int] = Field(
+        serialization_alias="product_category[]",
+        default=[CATEGORY_MAPPING.get("Main Category")],
+    )
     product_store: int = Field(serialization_alias="product_store[]", default=0)
-    image: str = Field(serialization_alias="image")
+    url_image: list[str] = Field(serialization_alias="image")

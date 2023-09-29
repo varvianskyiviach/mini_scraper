@@ -1,42 +1,40 @@
-from parser.services import get_all_web_miniatures
+from parser.services import get_all_web_product
 from typing import Generator
 
 from api.api_client import APIClient
 from authentication import get_token
 from config.settings import ADMIN_BASE_URL, ADMIN_PRODUCT_ADD, FILE_EXEL_NAME
 from image_manager.services import upload_image
-from miniatures.data_processor import DataProcessor
-from miniatures.models import Miniature, UncommitedMiniature
-from miniatures.services import get_all_base_miniatures
+from product.data_processor import DataProcessor
+from product.models import Product, UncommitedProduct
+from product.services import get_all_base_product
+from image_manager.models import Image
+
 
 token, session = get_token()
 
-all_web_miniatures: list[UncommitedMiniature] = get_all_web_miniatures()
-all_base_miniatures: list[UncommitedMiniature] = get_all_base_miniatures(
-    file=FILE_EXEL_NAME
-)
+all_web_product: list[UncommitedProduct] = get_all_web_product()
+all_base_product: list[UncommitedProduct] = get_all_base_product(file=FILE_EXEL_NAME)
 
 data_processor: DataProcessor = DataProcessor(
-    web_list=all_web_miniatures, base_list=all_base_miniatures
+    web_list=all_web_product, base_list=all_base_product
 )
-matching_miniatures: Generator[
-    UncommitedMiniature, None, None
-] = data_processor.get_matching_miniatures()
+matching_product: Generator[
+    UncommitedProduct, None, None
+] = data_processor.get_matching_products()
 api_processor: APIClient = APIClient(
     base_url=ADMIN_BASE_URL, token=token, session=session
 )
 
 
 def main():
-    for miniature in matching_miniatures:
-        new_url_image_on_web: str = upload_image(
-            url_image=miniature.image, token=token, session=session
+    for uncommited_product in matching_product:
+        image: Image = upload_image(
+            url_image=uncommited_product.url_image, token=token, session=session
         )
-
-        data: Miniature = data_processor.create_miniature(
-            miniature, new_url_image_on_web
+        data: Product = data_processor.create_product(
+            web_product=uncommited_product, image=image
         )
-        data = data.model_dump(by_alias=True)
         api_processor.send_post_request(endpoint=ADMIN_PRODUCT_ADD, data=data)
 
 
