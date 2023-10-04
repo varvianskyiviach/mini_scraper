@@ -13,7 +13,7 @@ load_dotenv(dotenv_path=f"{ROOT_DIR}/.env")
 # parser configuration
 # ====================
 # url
-MAIN_URL = "https://wizkids.com/upm"
+URL_MAPPING: dict = {"wizkids": "https://wizkids.com/upm", "dom_igor": "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/critical-role/"}
 
 # ====================
 # web app cofiguration

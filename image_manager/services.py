@@ -2,13 +2,22 @@ import os
 
 import requests
 from image_manager.models import Image
-from config.settings import (ADMIN_BASE_URL, ADMIN_FILE_UPLOAD, DIR_CATALOG,
-                             DIR_FOTO, DIR_PROJECT)
+from config.settings import (
+    ADMIN_BASE_URL,
+    ADMIN_FILE_UPLOAD,
+    DIR_FOTO,
+    DIR_PROJECT,
+)
 import json
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+}
+
 
 def upload_image(url_image, token, session) -> Image:
     try:
-        web_image = requests.get(url=url_image)
+        web_image = requests.get(url=url_image, headers=headers)
         if web_image.status_code == 200:
             image_name = os.path.basename(url_image)
             print(f"✅⬇️ File successfully downloaded: {image_name}")
@@ -19,7 +28,7 @@ def upload_image(url_image, token, session) -> Image:
         return
 
     params: dict = {"token": token, "directory": f"{DIR_FOTO}/{DIR_PROJECT}"}
-    file: dict = {"file[]": (image_name, web_image.content, "image/png")}
+    file: dict = {"file[]": (image_name, web_image.content, "image/jpeg")}
 
     try:
         response = session.post(
@@ -28,7 +37,7 @@ def upload_image(url_image, token, session) -> Image:
         response_content = json.loads(response.content)
         if response.status_code == 200:
             new_url_image: list = response_content["filepaths"]
-            image: Image = Image(name={file['file[]'][0]}, url_image=new_url_image)
+            image: Image = Image(name={file["file[]"][0]}, url_image=new_url_image)
             print(Image)
             print(
                 f"status code: {response.status_code}\n"
