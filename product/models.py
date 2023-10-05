@@ -9,7 +9,7 @@ class UncommitedProduct(BaseModel):
     sku: int
     name: str
     url_image: str | None
-    category_id: list[int | None]
+    category_id: list[int] | None
 
     def __str__(self) -> str:
         return "\n".join(

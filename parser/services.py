@@ -5,17 +5,30 @@ from bs4 import BeautifulSoup
 
 from config.settings import URL_MAPPING
 from product.models import UncommitedProduct
+from time import sleep
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \n"
-    "Chrome/117.0.0.0 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/117.0.0.0 Safari/537.36"
+    )
 }
 
 
 def get_all_web_product() -> list[UncommitedProduct]:
     all_web_product: list[UncommitedProduct] = []
-    # all_web_product.extend(parse_web_product_1(url=URL_MAPPING["wizkids"]))
-    all_web_product.extend(parse_web_product_2(url=URL_MAPPING["dom_igor"]))
+
+    for key in URL_MAPPING:
+        if key == "wizkids":
+            url = URL_MAPPING[key]
+            # all_web_product.extend(parse_web_product_1(url=URL_MAPPING["wizkids"]))
+        elif key == "dom_igor":
+            for url in URL_MAPPING[key]:
+                all_web_product.extend(parse_web_product_2(url=url))
+                sleep(20)
+
+
+    # all_web_product.extend(parse_web_product_2(url=URL_MAPPING["dom_igor"][0]))
 
     return all_web_product
 
@@ -61,11 +74,13 @@ def parse_web_product_1(url) -> List[UncommitedProduct]:
 
             if sku is not None:
                 result.append(
-                    UncommitedProduct(sku=sku, name=name, url_image=image, category_id=None)
+                    UncommitedProduct(
+                        sku=sku, name=name, url_image=image, category_id=None
+                    )
                 )
     else:
         print("Table has not found")
-    
+
     return result
 
 
@@ -102,7 +117,8 @@ def parse_web_product_2(url) -> List[UncommitedProduct]:
         articul_element = product.find("div", class_="minis_chars").find(
             "b", string="Артикул:"
         )
-        sku: int = int(articul_element.find_next_sibling(string=True).strip())
+        sku_body = articul_element.find_next_sibling(string=True).strip()
+        sku: int = int("".join(filter(str.isdigit, sku_body)))
         image = soup.find("div", class_="gallery-slider").find("img")["src"]
 
         result.append(

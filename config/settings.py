@@ -15,7 +15,10 @@ load_dotenv(dotenv_path=f"{ROOT_DIR}/.env")
 # url
 URL_MAPPING: dict = {
     "wizkids": "https://wizkids.com/upm",
-    "dom_igor": "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/critical-role/",
+    "dom_igor": [
+        "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/critical-role/",
+        "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/mtg-wizkids-series/",
+    ],
 }
 
 # ====================
@@ -25,9 +28,9 @@ URL_MAPPING: dict = {
 # --------------------
 # url
 # - local development -
-ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
+# ADMIN_BASE_URL = "http://localhost:8080/admin/index.php?route="
 # - production -
-# ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
+ADMIN_BASE_URL = "https://lisgames.com.ua/admin/index.php?route="
 ADMIN_LOGIN_URL = f"{ADMIN_BASE_URL}common/login"
 # endpoints
 ADMIN_FILE_UPLOAD = "common/filemanager/upload"

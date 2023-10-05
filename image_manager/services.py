@@ -3,14 +3,15 @@ import os
 
 import requests
 
-from config.settings import (ADMIN_BASE_URL, ADMIN_FILE_UPLOAD, DIR_FOTO,
-                             DIR_PROJECT)
+from config.settings import ADMIN_BASE_URL, ADMIN_FILE_UPLOAD, DIR_FOTO, DIR_PROJECT
 from image_manager.models import Image
 from requests import Session
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \n"
-    "Chrome/117.0.0.0 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/117.0.0.0 Safari/537.36"
+    )
 }
 
 
@@ -22,14 +23,16 @@ def upload_image(url_image: str | None, token: str, session: Session) -> Image |
                 image_name = os.path.basename(url_image)
                 print(f"✅⬇️ File successfully downloaded: {image_name}")
             else:
-                print(f"❌ File download failed. HTTP status code: {web_image.status_code}")
+                print(
+                    f"❌ File download failed. HTTP status code: {web_image.status_code}"
+                )
                 return None
         except Exception as e:
             print(f"❌ An error occurred while downloading a file {url_image}: {str(e)}")
             return None
     else:
         return None
-    
+
     params: dict = {"token": token, "directory": f"{DIR_FOTO}/{DIR_PROJECT}"}
     file: dict = {"file[]": (image_name, web_image.content, "image/jpeg")}
 
