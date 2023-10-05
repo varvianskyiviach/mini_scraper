@@ -1,25 +1,29 @@
 import csv
-from typing import List
 import re
+from typing import List
 
 from config.settings import STATIC_ROOT
-from product.models import UncommitedProduct
 from product.constants import CATEGORY_MAPPING
+from product.models import UncommitedProduct
 
 
-def get_category_name(text: str) -> str:
+def get_category_name(text: str) -> str | None:
     match = re.search(r" - (.*?) - ", text)
     if match:
         category_name = match.group(1).strip()
         try:
-            category_name = re.search(r"^(.*?) Unpainted Miniatures", category_name).group(1)
+            match = re.search(r"^(.*?) Unpainted Miniatures", category_name)
+            if match:
+                category_name = match.group(1)
+            else:
+                match = re.search(r"^(.*?) Wave", category_name)
+                if match:
+                    category_name = match.group(1)
         except AttributeError:
-            try:
-                category_name = re.search(r"^(.*?) Wave", category_name).group(1)
-            except AttributeError:
-                pass
+            raise AttributeError
 
         return category_name
+    return None
 
 
 def get_all_base_product(file) -> List[UncommitedProduct]:
@@ -34,9 +38,8 @@ def get_all_base_product(file) -> List[UncommitedProduct]:
     with open(f"{STATIC_ROOT}/{file}", "r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
-            
             name: str = row["name"]
-            category_name: str = get_category_name(text=name)
+            category_name: str | None = get_category_name(text=name)
 
             row["sku"] = int(row["sku"][3:])
             row["url_image"] = None

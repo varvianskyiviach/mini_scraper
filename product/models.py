@@ -2,23 +2,23 @@ from datetime import date
 
 from pydantic import BaseModel, Field
 
-from product.constants import FieldProduct, CATEGORY_MAPPING
+from product.constants import CATEGORY_MAPPING, FieldProduct
 
 
 class UncommitedProduct(BaseModel):
     sku: int
     name: str
     url_image: str | None
-    category_id: list[int] | None
+    category_id: list[int | None]
 
     def __str__(self) -> str:
         return "\n".join(
             (
                 f"name: {self.name},",
-                f"=================",
+                "=================",
                 f"sku: {self.sku},",
                 f"url_image: {self.url_image},",
-                f"category_id: {self.category_id}"
+                f"category_id: {self.category_id}",
             )
         )
 
@@ -64,7 +64,7 @@ class Product(BaseModel):
     manufacturer_id: int = Field(serialization_alias="manufacturer_id", default=88)
     main_category_id: int = Field(
         serialization_alias="main_category_id",
-        default=CATEGORY_MAPPING.get("Main Category"),
+        default=CATEGORY_MAPPING.get("Main Category", 287),
     )
     product_category: list[int] = Field(
         serialization_alias="product_category[]",

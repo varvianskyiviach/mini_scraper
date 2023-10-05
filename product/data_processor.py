@@ -1,7 +1,7 @@
 from typing import Generator
 
-from product.models import Product, UncommitedProduct
 from image_manager.models import Image
+from product.models import Product, UncommitedProduct
 
 
 class DataProcessor:
@@ -17,15 +17,15 @@ class DataProcessor:
                     yield base_product
                     break
 
-    def create_product(self, web_product: UncommitedProduct, image: Image) -> Product:
+    def create_product(self, web_product: UncommitedProduct, image: Image | None) -> Product:
         payload: dict = {
             "name": web_product.name,
             "name_alternative": web_product.name,
             "html_meta_h1": web_product.name,
             "model": str(web_product.sku),
-            "sku": "WZK"+str(web_product.sku),
+            "sku": "WZK" + str(web_product.sku),
             "product_category": web_product.category_id,
-            "url_image": image.url_image if image is not None else []
+            "url_image": image.url_image if image is not None else [],
         }
         try:
             product: Product = Product(**payload)
@@ -34,3 +34,4 @@ class DataProcessor:
         except Exception as e:
             print(f" ❌ Could not create a product: {payload['name']}")
             print(f"❗️{str(e)}")
+            raise Exception

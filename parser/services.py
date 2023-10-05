@@ -2,11 +2,13 @@ from typing import List
 
 import requests
 from bs4 import BeautifulSoup
+
 from config.settings import URL_MAPPING
 from product.models import UncommitedProduct
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \n"
+    "Chrome/117.0.0.0 Safari/537.36"
 }
 
 
@@ -31,29 +33,39 @@ def parse_web_product_1(url) -> List[UncommitedProduct]:
 
     result: list[UncommitedProduct] = []
     table = soup.find("table", class_="tablepress-id-108")
-    results_table = table.find("tbody", class_="row-hover").find_all("tr")
+    if table is not None:
+        tbody = table.find("tbody", class_="row-hover")
+        if tbody is not None:
+            results_table = tbody.find_all("tr")
+        else:
+            print("Table has not found")
+    else:
+        print("Table has not found")
 
-    for row in results_table:
-        columns = row.find_all("td")
-        try:
-            sku = int(columns[0].get_text())
-        except Exception:
+    if results_table is not None:
+        for row in results_table:
+            columns = row.find_all("td")
             try:
-                sku = int(columns[1].get_text())
+                sku = int(columns[0].get_text())
             except Exception:
-                sku = None
-        try:
-            image = columns[3].img["src"]
-        except Exception:
-            image = None
+                try:
+                    sku = int(columns[1].get_text())
+                except Exception:
+                    sku = None
+            try:
+                image = columns[3].img["src"]
+            except Exception:
+                image = None
 
-        name = columns[2].get_text()
+            name = columns[2].get_text()
 
-        if sku is not None:
-            result.append(
-                UncommitedProduct(sku=sku, name=name, url_image=image, category_id=None)
-            )
-
+            if sku is not None:
+                result.append(
+                    UncommitedProduct(sku=sku, name=name, url_image=image, category_id=None)
+                )
+    else:
+        print("Table has not found")
+    
     return result
 
 
@@ -77,7 +89,6 @@ def parse_web_product_2(url) -> List[UncommitedProduct]:
             url = next_page_link["href"]
         else:
             break
-    
 
     for product_link in all_products_link:
         soup = create_soup(url=product_link)
@@ -99,4 +110,3 @@ def parse_web_product_2(url) -> List[UncommitedProduct]:
         )
 
     return result
-

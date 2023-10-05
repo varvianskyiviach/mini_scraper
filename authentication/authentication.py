@@ -16,6 +16,9 @@ def get_token() -> Tuple[str, Session]:
     }
     response = session.post(ADMIN_LOGIN_URL, data=data)
     match = re.search(r"token=([A-Za-z0-9]+)", response.url)
-    token = match.group(1)
+    if match is not None:
+        token = match.group(1)
+    else:
+        raise Exception("Token has not received. Please check you login or password")
 
     return token, session

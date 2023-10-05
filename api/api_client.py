@@ -16,7 +16,9 @@ class APIClient:
             "token": self.token,
         }
         try:
-            response = self.session.post(url_create_object, params=params, data=form_data)
+            response = self.session.post(
+                url_create_object, params=params, data=form_data
+            )
             if response.status_code == 200:
                 print(
                     f"✅ Object successfully created: {form_data['product_description[1][name]']} \n"

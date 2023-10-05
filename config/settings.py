@@ -13,7 +13,10 @@ load_dotenv(dotenv_path=f"{ROOT_DIR}/.env")
 # parser configuration
 # ====================
 # url
-URL_MAPPING: dict = {"wizkids": "https://wizkids.com/upm", "dom_igor": "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/critical-role/"}
+URL_MAPPING: dict = {
+    "wizkids": "https://wizkids.com/upm",
+    "dom_igor": "https://domigr.com.ua/ua/c-modelirovanie/c-miniatures/critical-role/",
+}
 
 # ====================
 # web app cofiguration
@@ -34,6 +37,6 @@ ADMIN_PRODUCT_ADD = "catalog/product/add"
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
-DIR_CATALOG = 'catalog'
-DIR_FOTO = 'fotki'
+DIR_CATALOG = "catalog"
+DIR_FOTO = "fotki"
 DIR_PROJECT = "wizkids"
